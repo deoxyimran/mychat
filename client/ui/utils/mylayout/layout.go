@@ -17,7 +17,7 @@ type (
 )
 
 // Layout utils
-func BorderLayout(gtx C, inner layout.Widget, width float32, padding unit.Dp, color color.NRGBA) D {
+func Border(gtx C, inner layout.Widget, width float32, padding unit.Dp, color color.NRGBA) D {
 	// Layout inner first
 	dims := layout.UniformInset(padding).Layout(gtx, inner)
 
@@ -41,7 +41,7 @@ const (
 	BORDER_SIDE_RIGHT
 )
 
-func BorderOneSideLayout(gtx C, inner layout.Widget, borderSide BorderSide, width float32, padding unit.Dp, color color.NRGBA) D {
+func BorderOneSide(gtx C, inner layout.Widget, borderSide BorderSide, width float32, padding unit.Dp, color color.NRGBA) D {
 	// Layout inner first
 	dims := layout.UniformInset(padding).Layout(gtx, inner)
 

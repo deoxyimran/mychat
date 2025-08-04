@@ -93,7 +93,7 @@ func (l *LoginScreen) Layout(gtx C, screenPointer *Screen) D {
 							edit.TextSize = unit.Sp(14)
 							return layout.UniformInset(unit.Dp(10)).Layout(gtx,
 								func(gtx C) D {
-									return mylayout.BorderOneSideLayout(gtx, edit.Layout, mylayout.BORDER_SIDE_BOT, 2, 4, color.NRGBA{R: 200, G: 5, B: 30, A: 255}) // rgb(200, 5, 30)
+									return mylayout.BorderOneSide(gtx, edit.Layout, mylayout.BORDER_SIDE_BOT, 2, 4, color.NRGBA{R: 200, G: 5, B: 30, A: 255}) // rgb(200, 5, 30)
 								},
 							)
 						}),
@@ -109,7 +109,7 @@ func (l *LoginScreen) Layout(gtx C, screenPointer *Screen) D {
 							edit.Editor.Mask = '*'
 							return layout.UniformInset(unit.Dp(10)).Layout(gtx,
 								func(gtx C) D {
-									return mylayout.BorderOneSideLayout(gtx, edit.Layout, mylayout.BORDER_SIDE_BOT, 2, 4, color.NRGBA{R: 200, G: 5, B: 30, A: 255})
+									return mylayout.BorderOneSide(gtx, edit.Layout, mylayout.BORDER_SIDE_BOT, 2, 4, color.NRGBA{R: 200, G: 5, B: 30, A: 255})
 								},
 							)
 						}),
@@ -148,7 +148,7 @@ func (l *LoginScreen) Layout(gtx C, screenPointer *Screen) D {
 							edit.TextSize = unit.Sp(14)
 							return layout.UniformInset(unit.Dp(10)).Layout(gtx,
 								func(gtx C) D {
-									return mylayout.BorderOneSideLayout(gtx, edit.Layout, mylayout.BORDER_SIDE_BOT, 2, 4, color.NRGBA{R: 200, G: 5, B: 30, A: 255}) // rgb(200, 5, 30)
+									return mylayout.BorderOneSide(gtx, edit.Layout, mylayout.BORDER_SIDE_BOT, 2, 4, color.NRGBA{R: 200, G: 5, B: 30, A: 255}) // rgb(200, 5, 30)
 								},
 							)
 						}),
@@ -165,7 +165,7 @@ func (l *LoginScreen) Layout(gtx C, screenPointer *Screen) D {
 							gtx.Focused(l.signinPasswordEdit)
 							return layout.UniformInset(unit.Dp(10)).Layout(gtx,
 								func(gtx C) D {
-									return mylayout.BorderOneSideLayout(gtx, edit.Layout, mylayout.BORDER_SIDE_BOT, 2, 4, color.NRGBA{R: 200, G: 5, B: 30, A: 255})
+									return mylayout.BorderOneSide(gtx, edit.Layout, mylayout.BORDER_SIDE_BOT, 2, 4, color.NRGBA{R: 200, G: 5, B: 30, A: 255})
 								},
 							)
 						}),
@@ -181,7 +181,7 @@ func (l *LoginScreen) Layout(gtx C, screenPointer *Screen) D {
 							edit.Editor.Mask = '*'
 							return layout.UniformInset(unit.Dp(10)).Layout(gtx,
 								func(gtx C) D {
-									return mylayout.BorderOneSideLayout(gtx, edit.Layout, mylayout.BORDER_SIDE_BOT, 2, 4, color.NRGBA{R: 200, G: 5, B: 30, A: 255})
+									return mylayout.BorderOneSide(gtx, edit.Layout, mylayout.BORDER_SIDE_BOT, 2, 4, color.NRGBA{R: 200, G: 5, B: 30, A: 255})
 								},
 							)
 						}),
