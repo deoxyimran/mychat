@@ -1,4 +1,4 @@
-package ui
+package screens
 
 import (
 	"gioui.org/widget/material"

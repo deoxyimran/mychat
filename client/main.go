@@ -7,11 +7,11 @@ import (
 
 	"gioui.org/app"
 	"gioui.org/op"
-	"github.com/deoxyimran/mychat/client/ui"
+	"github.com/deoxyimran/mychat/client/ui/screens"
 )
 
-var screenPointer ui.Screen = ui.LOGIN_SCREEN
-var prevScreenPointer ui.Screen = ui.CHAT_SCREEN
+var screenPointer screens.Screen = screens.LOGIN_SCREEN
+var prevScreenPointer screens.Screen = screens.CHAT_SCREEN
 
 func main() {
 	go func() {
@@ -30,7 +30,7 @@ func main() {
 
 func run(window *app.Window) error {
 	var ops op.Ops
-	loginScreen := ui.NewLoginScreen(false)
+	loginScreen := screens.NewLoginScreen(false)
 	for {
 		switch e := window.Event().(type) {
 		case app.DestroyEvent:
