@@ -81,6 +81,12 @@ func (a *Animator) Stop() {
 	}
 }
 
+func (a *Animator) Cancel() {
+	a.Stop()
+	a.progress = 0
+	a.reversed = false
+}
+
 func (a *Animator) Update() {
 	if !a.running {
 		return
