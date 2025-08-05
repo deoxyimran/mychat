@@ -45,6 +45,20 @@ const (
 
 var shouldRenderBorder bool
 
+var posKeyFramed = animation.KeyframedProperty[f32.Point]{
+	Keyframes: []animation.Keyframe[f32.Point]{
+		{Time: 0, Value: f32.Pt(0, 0)}, // dummy
+		{Time: 1, Value: f32.Pt(0, 0)}, // dummy
+	},
+	Interp: animation.InterpPoint,
+}
+
+func getInterpPos(p1, p2 f32.Point, t float32) f32.Point {
+	posKeyFramed.Keyframes[0].Value = p1
+	posKeyFramed.Keyframes[1].Value = p2
+	return posKeyFramed.Sample(t)
+}
+
 func BorderOneSide(gtx C, inner layout.Widget, borderSide BorderSide, anim *animation.Animator, width float32, padding unit.Dp, color color.NRGBA) D {
 	if anim.Running() {
 		anim.Update()
@@ -57,7 +71,7 @@ func BorderOneSide(gtx C, inner layout.Widget, borderSide BorderSide, anim *anim
 	if borderSide == BORDER_SIDE_TOP {
 		var path clip.Path
 		p1 := f32.Pt(0, 0)
-		p2 := anim.LerpPos(p1, f32.Pt(float32(dims.Size.X), 0))
+		p2 := getInterpPos(p1, f32.Pt(float32(dims.Size.X), 0), anim.Progress())
 		if p2.X-p1.X <= 0.01 {
 			shouldRenderBorder = false
 		} else {
@@ -70,7 +84,7 @@ func BorderOneSide(gtx C, inner layout.Widget, borderSide BorderSide, anim *anim
 	} else if borderSide == BORDER_SIDE_BOT {
 		var path clip.Path
 		p1 := f32.Pt(0, float32(dims.Size.Y))
-		p2 := anim.LerpPos(p1, f32.Pt(float32(dims.Size.X), float32(dims.Size.Y)))
+		p2 := getInterpPos(p1, f32.Pt(float32(dims.Size.X), float32(dims.Size.Y)), anim.Progress())
 		if p2.X-p1.X <= 0.01 {
 			shouldRenderBorder = false
 		} else {
@@ -83,7 +97,7 @@ func BorderOneSide(gtx C, inner layout.Widget, borderSide BorderSide, anim *anim
 	} else if borderSide == BORDER_SIDE_LEFT {
 		var path clip.Path
 		p1 := f32.Pt(0, 0)
-		p2 := anim.LerpPos(p1, f32.Pt(0, float32(dims.Size.Y)))
+		p2 := getInterpPos(p1, f32.Pt(0, float32(dims.Size.Y)), anim.Progress())
 		if p2.X-p1.X <= 0.01 {
 			shouldRenderBorder = false
 		} else {
@@ -96,7 +110,7 @@ func BorderOneSide(gtx C, inner layout.Widget, borderSide BorderSide, anim *anim
 	} else {
 		var path clip.Path
 		p1 := f32.Pt(float32(dims.Size.X), 0)
-		p2 := anim.LerpPos(p1, f32.Pt(float32(dims.Size.X), float32(dims.Size.Y)))
+		p2 := getInterpPos(p1, f32.Pt(float32(dims.Size.X), float32(dims.Size.Y)), anim.Progress())
 		if p2.X-p1.X <= 0.01 {
 			shouldRenderBorder = false
 		} else {

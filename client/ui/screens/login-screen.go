@@ -133,7 +133,7 @@ func (l *LoginScreen) Layout(gtx C, screenPointer *Screen) D {
 										entered = true
 									case pointer.Release:
 										if entered {
-											l.login.animUsernameEdit.Start(time.Millisecond * 500)
+											l.login.animUsernameEdit.Start(time.Millisecond*250, animation.Once)
 											gtx.Execute(op.InvalidateCmd{})
 										}
 									}
@@ -175,7 +175,7 @@ func (l *LoginScreen) Layout(gtx C, screenPointer *Screen) D {
 										entered = true
 									case pointer.Release:
 										if entered {
-											l.login.animPassEdit.Start(time.Millisecond * 500)
+											l.login.animPassEdit.Start(time.Millisecond*250, animation.Once)
 											gtx.Execute(op.InvalidateCmd{})
 										}
 									}
@@ -241,7 +241,7 @@ func (l *LoginScreen) Layout(gtx C, screenPointer *Screen) D {
 										entered = true
 									case pointer.Release:
 										if entered {
-											l.signin.animUsernameEdit.Start(time.Millisecond * 250)
+											l.signin.animUsernameEdit.Start(time.Millisecond*250, animation.Once)
 											gtx.Execute(op.InvalidateCmd{})
 										}
 									}
