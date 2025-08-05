@@ -1,24 +1,84 @@
 package animation
 
 import (
-	"image/color"
 	"time"
-
-	"gioui.org/f32"
 )
+
+// ----------- Core Types -----------
+
+type PlayMode int
+
+const (
+	Once PlayMode = iota
+	Loop
+	PingPong
+)
+
+type Keyframe[T any] struct {
+	Time  float32 // 0.0 to 1.0
+	Value T
+}
+
+type Interpolator[T any] func(a, b T, t float32) T
+
+type KeyframedProperty[T any] struct {
+	Keyframes []Keyframe[T]
+	Interp    Interpolator[T]
+}
+
+func (kf KeyframedProperty[T]) Sample(t float32) T {
+	n := len(kf.Keyframes)
+	if n == 0 {
+		var zero T
+		return zero
+	}
+	if t <= kf.Keyframes[0].Time {
+		return kf.Keyframes[0].Value
+	}
+	if t >= kf.Keyframes[n-1].Time {
+		return kf.Keyframes[n-1].Value
+	}
+	for i := 0; i < n-1; i++ {
+		a := kf.Keyframes[i]
+		b := kf.Keyframes[i+1]
+		if t >= a.Time && t <= b.Time {
+			localT := (t - a.Time) / (b.Time - a.Time)
+			return kf.Interp(a.Value, b.Value, localT)
+		}
+	}
+	return kf.Keyframes[n-1].Value
+}
+
+// ----------- Animator -----------
 
 type Animator struct {
 	start    time.Time
 	duration time.Duration
 	running  bool
 	progress float32
+	reversed bool
+	playMode PlayMode
+	OnFinish func()
+	OnLoop   func()
+	OnStop   func()
 }
 
-func (a *Animator) Start(d time.Duration) {
+func (a *Animator) Start(duration time.Duration, mode PlayMode) {
 	a.start = time.Now()
-	a.duration = d
+	a.duration = duration
 	a.running = true
+	a.reversed = false
+	a.playMode = mode
 	a.progress = 0
+}
+
+func (a *Animator) Stop() {
+	if a.running {
+		a.running = false
+		if a.OnStop != nil {
+			a.OnStop()
+		}
+	}
 }
 
 func (a *Animator) Update() {
@@ -28,39 +88,39 @@ func (a *Animator) Update() {
 	elapsed := time.Since(a.start)
 	t := float32(elapsed) / float32(a.duration)
 	if t >= 1 {
-		t = 1
-		a.running = false
+		switch a.playMode {
+		case Once:
+			a.progress = 1
+			a.running = false
+			if a.OnFinish != nil {
+				a.OnFinish()
+			}
+		case Loop:
+			a.start = time.Now()
+			a.progress = 0
+			if a.OnLoop != nil {
+				a.OnLoop()
+			}
+		case PingPong:
+			a.start = time.Now()
+			a.reversed = !a.reversed
+			a.progress = 0
+			if a.OnLoop != nil {
+				a.OnLoop()
+			}
+		}
+	} else {
+		a.progress = t
 	}
-	a.progress = t
 }
 
-func (a *Animator) Running() bool {
-	return a.running
-}
-
-func (a *Animator) lerp() float32 {
+func (a *Animator) Progress() float32 {
+	if a.reversed {
+		return 1 - a.progress
+	}
 	return a.progress
 }
 
-func (a *Animator) LerpFloat(aVal, bVal float32) float32 {
-	t := a.lerp()
-	return aVal + (bVal-aVal)*t
-}
-
-func (a *Animator) LerpColor(c1, c2 color.NRGBA) color.NRGBA {
-	t := a.lerp()
-	return color.NRGBA{
-		R: uint8(float32(c1.R) + (float32(c2.R)-float32(c1.R))*t),
-		G: uint8(float32(c1.G) + (float32(c2.G)-float32(c1.G))*t),
-		B: uint8(float32(c1.B) + (float32(c2.B)-float32(c1.B))*t),
-		A: uint8(float32(c1.A) + (float32(c2.A)-float32(c1.A))*t),
-	}
-}
-
-func (a *Animator) LerpPos(p1, p2 f32.Point) f32.Point {
-	t := a.lerp()
-	return f32.Point{
-		X: p1.X + (p2.X-p1.X)*t,
-		Y: p1.Y + (p2.Y-p1.Y)*t,
-	}
-}
+func (a *Animator) Running() bool    { return a.running }
+func (a *Animator) Reversed() bool   { return a.reversed }
+func (a *Animator) IsFinished() bool { return !a.running }
