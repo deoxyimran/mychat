@@ -14,6 +14,7 @@ const (
 	PingPong
 )
 
+// ----------- Keyframes -----------
 type Keyframe[T any] struct {
 	Time  float32 // 0.0 to 1.0
 	Value T

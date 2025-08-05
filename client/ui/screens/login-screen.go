@@ -26,21 +26,36 @@ type (
 )
 
 type login struct {
-	btn              *widget.Clickable
-	animUsernameEdit animation.Animator
-	usernameEdit     *widget.Editor
-	passEdit         *widget.Editor
-	animPassEdit     animation.Animator
+	btn *widget.Clickable
+
+	usernameEdit        *widget.Editor
+	usernameEditExState editorExState
+	animUsernameEdit    animation.Animator
+
+	passEdit        *widget.Editor
+	passEditExState editorExState
+	animPassEdit    animation.Animator
 }
 
 type signin struct {
-	btn                 *widget.Clickable
-	animUsernameEdit    animation.Animator
+	btn *widget.Clickable
+
 	usernameEdit        *widget.Editor
-	animPassEdit        animation.Animator
-	passEdit            *widget.Editor
-	animConfirmPassEdit animation.Animator
-	confirmPassEdit     *widget.Editor
+	usernameEditExState editorExState
+	animUsernameEdit    animation.Animator
+
+	passEdit        *widget.Editor
+	passEditExState editorExState
+	animPassEdit    animation.Animator
+
+	confirmPassEdit        *widget.Editor
+	confirmPassEditExState editorExState
+	animConfirmPassEdit    animation.Animator
+}
+
+type editorExState struct {
+	pointerEntered  bool
+	pointerReleased bool
 }
 
 type LoginScreen struct {
@@ -220,7 +235,14 @@ func (l *LoginScreen) Layout(gtx C, screenPointer *Screen) D {
 							defer pointer.PassOp{}.Push(gtx.Ops).Pop()
 							dims := layout.UniformInset(unit.Dp(10)).Layout(gtx,
 								func(gtx C) D {
-									return mylayout.BorderOneSide(gtx, edit.Layout, mylayout.BORDER_SIDE_BOT, &l.signin.animUsernameEdit, 2, 4, color.NRGBA{R: 200, G: 5, B: 30, A: 255}) // rgb(200, 5, 30)
+									return mylayout.BorderOneSide(gtx,
+										edit.Layout,
+										l.signin.passEditExState.pointerEntered && ,
+										mylayout.BORDER_SIDE_BOT,
+										&l.signin.animUsernameEdit,
+										2, 4,
+										color.NRGBA{R: 200, G: 5, B: 30, A: 255}, // rgb(200, 5, 30)
+									)
 								},
 							)
 							// Check for focused event
